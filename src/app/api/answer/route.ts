@@ -8,16 +8,20 @@ export async function POST(request: NextRequest) {
     try {
         const {questionId, answer, authorId} = await request.json()
 
-        const responst = await databases.createDocument(db, answerCollection, ID.unique(), {
+        const response = await databases.createDocument(db, answerCollection, ID.unique(), {
             content: answer,
             authorId: authorId,
             questionId: questionId
         })
 
         //increase author reputation
-        users
+        const prefs = await users.getPrefs<UserPrefs>(authorId)
 
+        await users.updatePrefs(authorId, {
+            reputation: Number(prefs.reputation) + 1
+        })
 
+        return NextResponse.json(response, {status: 201})
     } catch (error: any) {
         return NextResponse.json(
             {
@@ -26,6 +30,17 @@ export async function POST(request: NextRequest) {
             {
                 status: error?.status || error?.code || 500
             }
+        )
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        
+    } catch (error: any) {
+        return NextResponse.json(
+            {error: error?.message || "Error deleting answer"},
+            {status: error?.status || error?.code || 500}
         )
     }
 }
