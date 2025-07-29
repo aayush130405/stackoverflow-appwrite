@@ -36,7 +36,15 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
     try {
+        const {answerId} = await request.json()         //get the answer ID from frontend
+
+        const answer = await databases.getDocument(db, answerCollection, answerId)      //find the answer document with that answer ID
+
+        const response = await databases.deleteDocument(db, answerCollection, answerId)     //remove the answer
+
+        //decrease the reputation
         
+
     } catch (error: any) {
         return NextResponse.json(
             {error: error?.message || "Error deleting answer"},
