@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useAuthStore } from "@/store/Auth"
-import React, { useState } from "react"
-import Link from "next/link";
+import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import { useAuthStore } from "@/store/Auth";
+import Link from "next/link";
 
 const BottomGradient = () => {
     return (
@@ -27,50 +27,45 @@ const LabelInputContainer = ({
     return <div className={cn("flex w-full flex-col space-y-2", className)}>{children}</div>;
 };
 
+export default function Register() {
+    const { login, createAccount } = useAuthStore();
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [error, setError] = React.useState("");
 
-function RegisterPage() {
-    const {createAccount, login} = useAuthStore()
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        const formData = new FormData(e.currentTarget);
+        const firstname = formData.get("firstname");
+        const lastname = formData.get("lastname");
+        const email = formData.get("email");
+        const password = formData.get("password");
 
-        //collect form data
-        const formData = new FormData(e.currentTarget)
-        const firstname = formData.get("firstname")
-        const lastname = formData.get("lastname")
-        const email = formData.get("email")
-        const password = formData.get("password")
-
-        //validate
-        if(!firstname || !lastname || !email || !password) {
-            setError(() => "Please fill out all the fields")
-            return
+        if (!firstname || !lastname || !email || !password) {
+            setError(() => "Please fill out all fields");
+            return;
         }
 
-        //call the store
-        setLoading(true)
-        setError('')
+        setIsLoading(() => true);
+        setError(() => "");
 
         const response = await createAccount(
             `${firstname} ${lastname}`,
-            email?.toString(),
-            password?.toString()
-        )
+            email.toString(),
+            password.toString()
+        );
 
-        if(response.error) {
-            setError(() => response.error!.message)
+        if (response.error) {
+            setError(() => response.error!.message);
         } else {
-            const loginResponse = await login(email.toString(), password.toString())
-
-            if(loginResponse.error) {
-                setError(() => loginResponse.error!.message)
+            const loginResponse = await login(email.toString(), password.toString());
+            if (loginResponse.error) {
+                setError(() => loginResponse.error!.message);
             }
         }
 
-        setLoading(() => false)
-    }
+        setIsLoading(() => false);
+    };
 
     return (
         <div className="mx-auto w-full max-w-md rounded-none border border-solid border-white/30 bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
@@ -78,7 +73,7 @@ function RegisterPage() {
                 Welcome to Riverflow
             </h2>
             <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-                Signup with riverflow if you don&apos;t have an account.
+                Signup with riverflow if you you don&apos;t have an account.
                 <br /> If you already have an account,{" "}
                 <Link href="/login" className="text-orange-500 hover:underline">
                     login
@@ -118,7 +113,7 @@ function RegisterPage() {
                 <button
                     className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
                     type="submit"
-                    disabled={loading}
+                    disabled={isLoading}
                 >
                     Sign up &rarr;
                     <BottomGradient />
@@ -130,7 +125,7 @@ function RegisterPage() {
                     <button
                         className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                         type="button"
-                        disabled={loading}
+                        disabled={isLoading}
                     >
                         <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
                         <span className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -141,7 +136,7 @@ function RegisterPage() {
                     <button
                         className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                         type="button"
-                        disabled={loading}
+                        disabled={isLoading}
                     >
                         <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
                         <span className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -152,7 +147,5 @@ function RegisterPage() {
                 </div>
             </form>
         </div>
-    )
+    );
 }
-
-export default RegisterPage
