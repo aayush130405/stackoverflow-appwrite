@@ -7,21 +7,9 @@ import { cn } from "@/lib/utils"
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
 import { IconTrash } from "@tabler/icons-react";
-import { ID, Models } from "appwrite";
+import { ID, Models } from "node-appwrite";
 import Link from "next/link";
 import React from "react";
-
-type Author = {
-    $id?: string,
-    name?: string
-}
-
-type Comment = Models.Document & {
-    content?: string,
-    authorId?: string,
-    author?: Author,
-    $createdAt?: string
-}
 
 const Comments = ({
     comments: _comments,
@@ -29,7 +17,7 @@ const Comments = ({
     typeId,
     className,
 }: {
-    comments: Models.DocumentList<Comment>;
+    comments: Models.DocumentList<Models.Document>;
     type: "question" | "answer";
     typeId: string;
     className?: string;

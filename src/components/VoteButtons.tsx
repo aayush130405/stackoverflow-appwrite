@@ -5,9 +5,10 @@ import { db, voteCollection } from "@/models/name";
 import { useAuthStore } from "@/store/Auth";
 import { cn } from "@/lib/utils";
 import { IconCaretUpFilled, IconCaretDownFilled } from "@tabler/icons-react";
-import { ID, Models, Query } from "appwrite";
+import { ID, Models, Query } from "node-appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
+
 
 const VoteButtons = ({
     type,
@@ -22,11 +23,8 @@ const VoteButtons = ({
     downvotes: Models.DocumentList<Models.Document>;
     className?: string;
 }) => {
-    type VoteDocument = Models.Document & {
-        voteStatus?: "upvoted" | "downvoted";
-    }
 
-    const [votedDocument, setVotedDocument] = React.useState<VoteDocument | null>(); // undefined means not fetched yet
+    const [votedDocument, setVotedDocument] = React.useState<Models.Document | null>(); 
     const [voteResult, setVoteResult] = React.useState<number>(upvotes.total - downvotes.total);
 
     const { user } = useAuthStore();

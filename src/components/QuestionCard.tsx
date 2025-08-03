@@ -3,27 +3,12 @@
 import React from "react";
 import { BorderBeam } from "./magicui/border-beam";
 import Link from "next/link";
-import { Models } from "appwrite";
+import { Models } from "node-appwrite";
 import slugify from "@/utils/slugify";
 import { avatars } from "@/models/client/config";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 
-type Author = {
-    $id: string;
-    name: string;
-    reputation: number;
-};
-
-type QuestionDocument = Models.Document & {
-    title: string;
-    tags: string[];
-    totalVotes: number;
-    totalAnswers: number;
-    author: Author;
-    $createdAt: string;
-};
-
-const QuestionCard = ({ ques }: { ques: QuestionDocument }) => {
+const QuestionCard = ({ ques }: { ques: Models.Document }) => {
     const [height, setHeight] = React.useState(0);
     const ref = React.useRef<HTMLDivElement>(null);
 

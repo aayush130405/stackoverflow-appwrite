@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/Auth";
 import { cn } from "@/lib/utils";
 import slugify from "@/utils/slugify";
 import { IconX } from "@tabler/icons-react";
-import { Models, ID } from "appwrite";
+import { Models, ID } from "node-appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { databases, storage } from "@/models/client/config";
@@ -35,15 +35,7 @@ const LabelInputContainer = ({
     );
 };
 
-type QuestionDocument = Models.Document & {
-    title?: string,
-    content?: string,
-    authorId?: string,
-    tags?: string[],
-    attachmentId?: string
-}
-
-const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
+const QuestionForm = ({ question }: { question?: Models.Document }) => {
     const { user } = useAuthStore();
     const [tag, setTag] = React.useState("");
     const router = useRouter();

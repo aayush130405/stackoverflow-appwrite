@@ -1,6 +1,6 @@
 "use client";
 
-import { ID, Models } from "appwrite";
+import { ID, Models } from "node-appwrite";
 import React from "react";
 import VoteButtons from "./VoteButtons";
 import { useAuthStore } from "@/store/Auth";
@@ -20,22 +20,7 @@ const Answers = ({
     questionId: string;
 }) => {
 
-    type Author = {
-        $id?: string,
-        name?: string,
-        reputation?: number
-    }
-
-    type Answer = Models.Document & {
-        author?: Author | undefined,
-        authorId?: string,
-        content?: string,
-        upvotesDocuments: Models.DocumentList<Models.Document> | null,
-        downvotesDocuments: Models.DocumentList<Models.Document> | null,
-        comments?: Models.DocumentList<Models.Document>,
-    }
-
-    const [answers, setAnswers] = React.useState<Models.DocumentList<Answer>>(_answers as Models.DocumentList<Answer>);
+    const [answers, setAnswers] = React.useState<Models.DocumentList<Models.Document>>(_answers);
     const [newAnswer, setNewAnswer] = React.useState("");
     const { user } = useAuthStore();
 
